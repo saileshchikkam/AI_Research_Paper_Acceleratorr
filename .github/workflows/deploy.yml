@@ -1,0 +1,135 @@
+# .github/workflows/deploy.yml
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  # Job 1: Build and Verify Code
+  build-and-test:
+    name: Build & Lint Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run Build Verification
+        run: npm run build
+
+  # Job 2: Deploy Full-Stack App to Vercel (Highly recommended since vercel.json is configured)
+  # Activated by setting VERCEL_TOKEN, VERCEL_ORG_ID, and VERCEL_PROJECT_ID secrets in GitHub Repository Secrets.
+  deploy-vercel:
+    name: Deploy Full-Stack to Vercel
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    # Run only on push to main branch and when Vercel credentials are provided
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Check Vercel Secrets Setup
+        id: check-secrets
+        run: |
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ] || [ -z "${{ secrets.VERCEL_ORG_ID }}" ] || [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
+            echo "::warning::Vercel deployment skipped because Vercel secrets (VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID) are missing. See README for details."
+            echo "has_secrets=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_secrets=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install Vercel CLI
+        if: steps.check-secrets.outputs.has_secrets == 'true'
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel Environment Information
+        if: steps.check-secrets.outputs.has_secrets == 'true'
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Build Project Artifacts via Vercel
+        if: steps.check-secrets.outputs.has_secrets == 'true'
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Deploy Production Release to Vercel
+        if: steps.check-secrets.outputs.has_secrets == 'true'
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+  # Job 3: Deploy Frontend Only to GitHub Pages (Fallback)
+  # Warning: Since this is a full-stack App, Express API routes (/api/*) will not run on GitHub Pages!
+  deploy-github-pages:
+    name: Deploy Static Frontend to GitHub Pages
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    # Run only on push to main branch and if Vercel deployment secrets are not configured
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Build Client-Side Static Assets
+        run: |
+          # Only build the frontend static files using vite
+          npx vite build
+
+      - name: Deploy Static Build to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'deploy: Static frontend deployment to GitHub Pages [skip ci]'

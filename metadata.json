@@ -1,0 +1,6 @@
+{
+  "name": "ResearchMind AI",
+  "description": "AI Research Paper Accelerator - upload papers, interact via AI chat, generate citations, quizzes, flashcards, and mind maps.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

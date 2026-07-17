@@ -1,0 +1,384 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* Custom global scrollbars and styling details */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+  100% { transform: scale(0.95); opacity: 0.5; }
+}
+
+.pulsing-ring {
+  animation: pulse-ring 2s infinite ease-in-out;
+}
+
+/* Slide up animations */
+.fade-in-up {
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom interactive card highlights */
+.glow-card:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+/* ====================================================
+   GLOBAL AMBIENT DARK MODE THEME OVERRIDES
+   ==================================================== */
+
+html.dark {
+  background-color: #0d111d !important;
+  color: #f8fafc !important;
+}
+
+.dark body {
+  background-color: #0d111d !important;
+  color: #f8fafc !important;
+}
+
+/* Base text contrast mappings */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: #ffffff !important;
+}
+
+/* Direct text overrides */
+.dark .text-slate-950,
+.dark .text-slate-900 {
+  color: #f8fafc !important;
+}
+
+.dark .text-slate-800 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-slate-700 {
+  color: #e2e8f0 !important;
+}
+
+.dark .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+.dark .text-slate-400 {
+  color: #64748b !important;
+}
+
+.dark .text-slate-300 {
+  color: #475569 !important;
+}
+
+/* Translucent Glassmorphism Cards & Dialog Panels */
+.dark .bg-white,
+.dark .bg-white\/60,
+.dark .bg-white\/80 {
+  background-color: rgba(20, 26, 43, 0.7) !important;
+  backdrop-filter: blur(16px);
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Sidebar background adjustment to remain solid dark */
+.dark #sidebar_root {
+  background-color: #070a12 !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.dark #sidebar_user_footer {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Main background wrappers */
+.dark .bg-slate-50,
+.dark .bg-slate-50\/50,
+.dark .bg-slate-50\/70 {
+  background-color: rgba(13, 17, 29, 0.8) !important;
+}
+
+.dark .bg-slate-100 {
+  background-color: rgba(30, 41, 59, 0.8) !important;
+}
+
+/* Borders */
+.dark .border-slate-100,
+.dark .border-slate-150\/40 {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.dark .border-slate-200,
+.dark .border-slate-200\/50 {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark .border-slate-300 {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Forms, Inputs, Textareas, and Dropdowns */
+.dark input[type="text"],
+.dark input[type="search"],
+.dark input[type="number"],
+.dark textarea,
+.dark select {
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark input[type="text"]:focus,
+.dark input[type="search"]:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: #3b82f6 !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* List Items / Tables hover and stripe effects */
+.dark .hover\:bg-slate-50:hover,
+.dark .hover\:bg-white\/40:hover {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.dark .bg-slate-50\/50 {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Dialog and Popup Modals */
+.dark .bg-black\/50,
+.dark .bg-slate-900\/50,
+.dark .bg-slate-900\/80 {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(8px);
+}
+
+/* Scrollbars on Dark Theme */
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Empty states / Dashed borders */
+.dark .border-dashed {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Adaptive Colored Badges/Indicators */
+.dark .bg-blue-50,
+.dark .bg-blue-50\/20 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+.dark .text-blue-600,
+.dark .text-blue-700,
+.dark .text-blue-950 {
+  color: #60a5fa !important;
+}
+.dark .border-blue-100 {
+  border-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+.dark .bg-emerald-50,
+.dark .bg-emerald-50\/20 {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+}
+.dark .text-emerald-600,
+.dark .text-emerald-700 {
+  color: #34d399 !important;
+}
+.dark .border-emerald-100 {
+  border-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+.dark .bg-amber-50,
+.dark .bg-amber-50\/20 {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+}
+.dark .text-amber-600,
+.dark .text-amber-700 {
+  color: #fbbf24 !important;
+}
+.dark .border-amber-100 {
+  border-color: rgba(245, 158, 11, 0.15) !important;
+}
+
+.dark .bg-purple-50,
+.dark .bg-purple-50\/20 {
+  background-color: rgba(139, 92, 246, 0.1) !important;
+}
+.dark .text-purple-600,
+.dark .text-purple-700 {
+  color: #c084fc !important;
+}
+.dark .border-purple-100 {
+  border-color: rgba(139, 92, 246, 0.15) !important;
+}
+
+.dark .bg-orange-50 {
+  background-color: rgba(249, 115, 22, 0.1) !important;
+}
+.dark .text-orange-700 {
+  color: #fb923c !important;
+}
+.dark .border-orange-100 {
+  border-color: rgba(249, 115, 22, 0.15) !important;
+}
+
+.dark .bg-indigo-50 {
+  background-color: rgba(99, 102, 241, 0.1) !important;
+}
+.dark .text-indigo-600 {
+  color: #818cf8 !important;
+}
+.dark .border-indigo-100 {
+  border-color: rgba(99, 102, 241, 0.15) !important;
+}
+
+/* Literature review highlights & specific study logs */
+.dark .bg-blue-50\/70 { background-color: rgba(59, 130, 246, 0.1) !important; }
+.dark .bg-purple-50\/70 { background-color: rgba(139, 92, 246, 0.1) !important; }
+.dark .bg-amber-50\/70 { background-color: rgba(245, 158, 11, 0.1) !important; }
+.dark .bg-emerald-50\/70 { background-color: rgba(16, 185, 129, 0.1) !important; }
+.dark .bg-indigo-50\/70 { background-color: rgba(99, 102, 241, 0.1) !important; }
+
+/* Custom elements, quiz options and flashcards */
+.dark .bg-blue-500\/10 {
+  background-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+.dark .hover\:bg-blue-50\/50:hover {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+}
+
+/* File uploading step / active progress dots */
+.dark .bg-blue-600\/20 {
+  background-color: rgba(37, 99, 235, 0.2) !important;
+}
+
+/* Chat bubble styling */
+.dark .bg-slate-50\/80 {
+  background-color: rgba(30, 41, 59, 0.5) !important;
+}
+.dark .bg-blue-50\/80 {
+  background-color: rgba(37, 99, 235, 0.15) !important;
+}
+
+/* Paper details view and active item backgrounds */
+.dark .hover\:bg-slate-50\/80:hover {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+/* PDF viewer container panel */
+.dark .bg-slate-100\/50 {
+  background-color: rgba(15, 23, 42, 0.8) !important;
+}
+
+/* Literature review interactive grid selection */
+.dark .border-blue-500 {
+  border-color: #3b82f6 !important;
+}
+
+.dark .bg-blue-50\/20 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Dynamic quiz feedback overlays */
+.dark .bg-emerald-50\/50 { background-color: rgba(16, 185, 129, 0.08) !important; }
+.dark .bg-red-50\/50 { background-color: rgba(239, 68, 68, 0.08) !important; }
+.dark .text-red-600 { color: #f87171 !important; }
+.dark .border-red-100 { border-color: rgba(239, 68, 68, 0.15) !important; }
+.dark .bg-red-50 { background-color: rgba(239, 68, 68, 0.1) !important; }
+
+/* ====================================================
+   GLOBAL TYPOGRAPHY ENHANCEMENT & SCALE RULES
+   ==================================================== */
+body {
+  font-size: 15px;
+}
+
+/* Balance micro labels and utility details */
+.text-\[8px\] {
+  font-size: 9.5px !important;
+}
+.text-\[9px\] {
+  font-size: 10.5px !important;
+}
+.text-\[10px\] {
+  font-size: 11.5px !important;
+}
+.text-xs {
+  font-size: 0.825rem !important; /* ~13.2px */
+}
+.text-sm {
+  font-size: 0.925rem !important; /* ~14.8px */
+}
+.text-base {
+  font-size: 1.05rem !important; /* ~16.8px */
+}
+.text-lg {
+  font-size: 1.15rem !important; /* ~18.4px */
+}
+.text-xl {
+  font-size: 1.3rem !important; /* ~20.8px */
+}
+.text-2xl {
+  font-size: 1.6rem !important; /* ~25.6px */
+}
+
+/* Ensure inputs, selects, and textareas are comfortable */
+input, select, textarea {
+  font-size: 0.925rem !important; /* ~14.8px */
+}
