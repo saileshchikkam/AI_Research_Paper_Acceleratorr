@@ -1,8 +1,10 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // The current application persists data through its authenticated API/MongoDB backend.
+    // No direct Firestore client access is required by the traced frontend.
     match /{document=**} {
-      allow read, write: if true;
+      allow read, write: if false;
     }
   }
 }
